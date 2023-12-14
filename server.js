@@ -40,6 +40,22 @@ app.post('/api/notes', (req, res) => {
     res.json(newNote)
 })
 
+app.delete('/api/notes/:id', (req, res) => {
+    const noteID = req.params.id
+    let notes = JSON.parse(fs.readFileSync('./db/db.json', 'utf8'))
+    
+    const noteIndex = notes.findIndex((note) => note.id === noteID)
+
+    if (noteIndex !== -1) {
+        notes.splice(noteIndex, 1)
+
+        fs.writeFileSync('./db/db.json', JSON.stringify(notes))
+        res.json({message: 'Note successfully deleted'})
+    } else {
+        res.status(404).json({error: 'Note not found'})
+    }
+})
+
 app.listen(PORT, () => {
     console.log(`server is running on http://localhost:${PORT}`)
 })

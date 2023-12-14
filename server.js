@@ -10,29 +10,37 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(express.static('public'))
 
-app.get('/', (req, res) => {
+app.get('/notes', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'notes.html'))
 })
 
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'))
-})
+// app.get('*', (req, res) => {
+//     res.sendFile(path.join(__dirname, 'public', 'index.html'))
+// })
 
 app.get('/api/notes', (req, res) => {
-    const notes = JSON.parse(fs.readFileSync('db.json', 'utf8'))
-    res.json(notes)
+   fs.readFile('./db/db.json', 'utf8', (err, data) => {
+        if (err) {
+            console.error('Error reading note file:', err)
+            res.status(500).json({error: 'Internal Server Error'})
+        } else {
+            const notes = JSON.parse(data)
+            console.log('Notes:', notes)
+            res.json(notes)
+        }
+   })
 })
 
 app.post('/api/notes', (req, res) => {
-    const { noteName, noteText } = req.body
+    const { title, text } = req.body
     const newNote = {
         id: uuid(),
-        noteName,
-        noteText,
+        title,
+        text,
     }
-    const notes = JSON.parse(fs.readFileSync('db.json', 'utf8'))
+    const notes = JSON.parse(fs.readFileSync('./db/db.json', 'utf8'))
     notes.push(newNote)
-    fs.writeFileSync('db.json', JSON.stringify(notes))
+    fs.writeFileSync('./db/db.json', JSON.stringify(notes))
     res.json(newNote)
 })
 

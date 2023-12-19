@@ -1,6 +1,6 @@
 # express-notes
-![Image of express-notes home page](assets\HomePageSS.png)
-![Image of express-notes application](assets\NotePageSS.png)
+![Image of express-notes home page](./assets/HomePageSS.png)
+![Image of express-notes application](./assets/NotePageSS.png)
 
 ## Links
 https://express-note-a3cb92a839c6.herokuapp.com/notes
